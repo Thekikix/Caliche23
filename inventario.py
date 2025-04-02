@@ -11,21 +11,27 @@ def crear_tabla(self):
             cantidad INTEGER NOT NULL,
             precio REAL NOT NULL,
             fecha_vencimiento TEXT,
+            categoria TEXT NOT NULL,
+            imagen TEXT,
             fecha_registro TEXT NOT NULL
         )
     ''')
     self.conexion.commit()
 
-def agregar_producto(self, nombre, codigo_barra, cantidad, precio, fecha_vencimiento=None):
+def agregar_producto(self, nombre, codigo_barra, cantidad, precio, categoria, imagen=None, fecha_vencimiento=None):
     fecha_registro = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     self.cursor.execute('''
-        INSERT INTO productos (nombre, codigo_barra, cantidad, precio, fecha_vencimiento, fecha_registro)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ''', (nombre, codigo_barra, cantidad, precio, fecha_vencimiento, fecha_registro))
+        INSERT INTO productos (nombre, codigo_barra, cantidad, precio, categoria, imagen, fecha_vencimiento, fecha_registro)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (nombre, codigo_barra, cantidad, precio, categoria, imagen, fecha_vencimiento, fecha_registro))
     self.conexion.commit()
 
 def mostrar_productos(self):
     self.cursor.execute("SELECT * FROM productos")
+    return self.cursor.fetchall()
+
+def mostrar_por_categoria(self, categoria):
+    self.cursor.execute("SELECT * FROM productos WHERE categoria = ?", (categoria,))
     return self.cursor.fetchall()
 
 def buscar_producto(self, codigo_barra):
@@ -49,5 +55,7 @@ def cerrar_conexion(self):
 
 Ejemplo de uso
 
-tiendadb = Inventario() tiendadb.agregar_producto("Leche", "123456789", 10, 1.5, "2025-12-31") print(tiendadb.mostrar_productos()) tiendadb.cerrar_conexion()
+tiendadb = Inventario() tiendadb.agregar_producto("Leche", "123456789", 10, 1.5, "Líquidos", "leche.png", "2025-12-31") tiendadb.agregar_producto("Pan", "987654321", 20, 0.8, "Comestibles", "pan.png") print("Todos los productos:", tiendadb.mostrar_productos()) print("Productos líquidos:", tiendadb.mostrar_por_categoria("Líquidos")) tiendadb.cerrar_conexion()
+
+
 
