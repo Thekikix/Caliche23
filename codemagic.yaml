@@ -7,7 +7,8 @@ workflows:
     ios-workflow-id:
         name: iOS Sample Workflow
         # ......
-import sqlite3 from datetime import datetime
+import sqlite3  
+from datetime import datetime
 
 class Inventario: def init(self): self.conexion = sqlite3.connect("inventario.db") self.cursor = self.conexion.cursor() self.crear_tabla()
 
